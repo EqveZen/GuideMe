@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GuideMe — голосовой помощник для незрячих</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👁️ GuideMe (Веди меня) 🔉</h1>
+            <div class="subtitle">AI-ассистент для незрячих людей</div>
+        </header>
+        
+        <main>
+            <div class="video-container">
+                <video id="video" autoplay playsinline></video>
+                <canvas id="overlay"></canvas>
+            </div>
+            
+            <div class="controls">
+                <button id="startBtn" class="primary">▶ Запустить камеру</button>
+                <button id="stopBtn" disabled>⏹ Остановить</button>
+                <button id="describeBtn" disabled>🔊 Опиши сцену</button>
+                <button id="settingsBtn">⚙️ Настройки</button>
+                <button id="testVoiceBtn">🔊 Тест голоса</button>
+            </div>
+            
+            <!-- Панель настроек -->
+            <div id="settingsPanel" class="settings-panel hidden">
+                <h3>Настройки</h3>
+                <div class="setting-item">
+                    <label>🔊 Громкость</label>
+                    <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+                </div>
+                <div class="setting-item">
+                    <label>⚡ Частота подсказок (сек)</label>
+                    <input type="range" id="frequency" min="3" max="10" step="1" value="5">
+                </div>
+                <div class="setting-item">
+                    <label>🎯 Минимальная уверенность</label>
+                    <input type="range" id="confidence" min="0.3" max="0.9" step="0.1" value="0.4">
+                </div>
+                <div class="setting-item checkbox">
+                    <label>
+                        <input type="checkbox" id="soundEnabled" checked> Звуковые подсказки
+                    </label>
+                </div>
+                <button id="closeSettingsBtn">Готово</button>
+            </div>
+            
+            <div class="status-panel">
+                <div class="status-title">Сейчас</div>
+                <div id="status">Ожидание запуска камеры...</div>
+            </div>    
+            <div class="info-panel">
+                <div class="info-item">
+                    <span class="info-label">Статус Модели:</span>
+                    <span id="modelStatus">Не загружена</span>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <div class="footer">
+                ⚠️ Альфа-версия. Все данные обрабатываются локально.
+            </div>
+        </footer>
+    </div>
+  
+    <script src="js/utils.js"></script>
+    <script src="js/speech.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/detection.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
