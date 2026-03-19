@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuideMe — видеть мир ушами</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(76, 175, 80, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(33, 150, 243, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+
+        .nav a:hover {
+            opacity: 1;
+        }
+
+        .hero {
+            padding: 80px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .btn-outline:hover {
+            border-color: #4CAF50;
+        }
+
+        /* Стили для изображений */
+        .hero-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(33, 150, 243, 0.1));
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 30px;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(33, 150, 243, 0.1));
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 30px;
+        }
+
+        .placeholder-text {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 18px;
+        }
+
+        .how-it-works {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 20px;
+            opacity: 0.7;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 40px 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+
+        .step:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #4CAF50;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+        }
+
+        .step-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .mission {
+            padding: 80px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(33, 150, 243, 0.1));
+            border-radius: 60px;
+            margin: 60px 0;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mission-text {
+            font-size: 28px;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .mission-author {
+            margin-top: 30px;
+            opacity: 0.6;
+        }
+
+        .features {
+            padding: 100px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .feature {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+
+        .feature:hover {
+            border-color: #2196F3;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+
+        .about {
+            padding: 100px 0;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        /* Дорожная карта */
+        .roadmap {
+            padding: 100px 0;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 60px auto 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #4CAF50, #2196F3);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-date {
+            width: 200px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            border-radius: 50px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        }
+
+        .timeline-content {
+            width: 400px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #4CAF50;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            left: -50px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            right: -50px;
+        }
+
+        .timeline-content h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+
+        .timeline-content p {
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .timeline-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 50px;
+            font-size: 14px;
+            color: #4CAF50;
+        }
+
+        .timeline-badge.completed {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .donate {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .donate-card {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 60px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(33, 150, 243, 0.1));
+            border-radius: 60px;
+            border: 1px solid #4CAF50;
+        }
+
+        .donate-title {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .donate-description {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        .donate-amounts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .amount {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .amount:hover {
+            border-color: #4CAF50;
+            transform: scale(1.05);
+        }
+
+        .btn-donate {
+            background: #4CAF50;
+            color: #fff;
+            padding: 20px 60px;
+            font-size: 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-donate:hover {
+            background: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(76, 175, 80, 0.4);
+        }
+
+        .footer {
+            padding: 50px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #fff;
+            transition: 0.3s;
+        }
+
+        .social-link:hover {
+            background: #4CAF50;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-title {
+                font-size: 48px;
+            }
+            
+            .steps, .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer {
+                grid-template-columns: 1fr;
+            }
+            
+            .mission-text {
+                font-size: 22px;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+                align-items: flex-start;
+                margin-left: 60px;
+            }
+
+            .timeline-date {
+                width: 150px;
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .timeline-content::before {
+                left: -40px !important;
+                right: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+<div class="logo">
+    <!-- ===== ВСТАВЬТЕ ЛОГОТИП СЮДА ===== -->
+    <img src="images/logo.png" alt="GuideMe Logo" style="height: 50px; width: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="logo-icon" style="display: none;">👁️🔊</div>
+    <span class="logo-text">GuideMe</span>
+</div>
+            <nav class="nav">
+                <a href="#how-it-works">Как это работает</a>
+                <a href="#features">Функции</a>
+                <a href="#about">О проекте</a>
+                <a href="#roadmap">Развитие</a>
+                <a href="#donate">Поддержать</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div>
+                <h1 class="hero-title">
+                    <span class="gradient-text">GuideMe</span><br>
+                    видеть мир<br>ушами
+                </h1>
+                <p class="hero-description">
+                    Голосовой AI-помощник для незрячих людей. 
+                    Мы верим, что технологии должны делать мир доступнее для каждого.
+                </p>
+                <div class="hero-buttons">
+                    <a href="https://eqvezen.github.io/GuideMe/" class="btn btn-primary">Попробовать</a>
+                    <a href="#about" class="btn btn-outline">Узнать больше</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- ===== МЕСТО ДЛЯ ФОТО 1: Телефон с камерой и рамками ===== -->
+                <!-- Положите файл в images/hero-photo.jpg -->
+                <img src="images/hero-photo.jpg" alt="GuideMe в действии" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="placeholder-text" style="display: none; flex-direction: column;">
+                    <span style="font-size: 48px; margin-bottom: 10px;">📸</span>
+                    <span>Вставьте фото телефона с распознаванием</span>
+                    <small style="font-size: 14px; margin-top: 10px;">images/hero-photo.jpg</small>
+                </div>
+            </div>
+        </section>
+
+        <div class="mission">
+            <div class="mission-text">
+                "Мы не просто создаём приложение. Мы даём людям свободу, независимость и уверенность в каждом шаге. Технологии на службе добра — это не просто слова."
+            </div>
+            <div class="mission-author">— команда GuideMe</div>
+        </div>
+
+        <section id="how-it-works" class="how-it-works">
+            <h2 class="section-title"><span class="gradient-text">Как это работает</span></h2>
+            <div class="section-subtitle">
+                Три простых шага, чтобы мир стал ближе
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">📸</div>
+                    <h3 class="step-title">1. Наведите камеру</h3>
+                    <p>Направьте телефон на то, что хотите увидеть</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">🧠</div>
+                    <h3 class="step-title">2. ИИ анализирует</h3>
+                    <p>Нейросеть распознаёт объекты в реальном времени</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">🔊</div>
+                    <h3 class="step-title">3. Слышите описание</h3>
+                    <p>Приятный голос рассказывает, что перед вами</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2 class="section-title"><span class="gradient-text">Возможности</span></h2>
+            <div class="section-subtitle">
+                Всё, чтобы чувствовать себя уверенно
+            </div>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">👁️</div>
+                    <h3 class="feature-title">Распознавание объектов</h3>
+                    <p>Люди, машины, животные, предметы — более 90 классов</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔊</div>
+                    <h3 class="feature-title">Голосовое описание</h3>
+                    <p>Естественный женский голос, приятный и заботливый</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🚨</div>
+                    <h3 class="feature-title">Режим безопасности</h3>
+                    <p>Предупреждает об опасности и близких объектах</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚙️</div>
+                    <h3 class="feature-title">Гибкие настройки</h3>
+                    <p>Громкость, частота подсказок, точность распознавания</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="about-content">
+                <div>
+                    <h2 class="section-title" style="text-align: left;">О проекте</h2>
+                    <p class="about-text">
+                        GuideMe родился из простой идеи: технологии должны делать 
+                        мир доступнее для каждого. Мы верим, что незрячие люди 
+                        заслуживают свободы передвижения и независимости.
+                    </p>
+                    <p class="about-text" style="margin-top: 20px;">
+                        Наш помощник работает прямо в браузере, не требует установки 
+                        всегда доступен для тех, кому это действительно нужно.
+                    </p>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-number">90+</div>
+                            <div>объектов</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">100%</div>
+                            <div>бесплатно до главного релиза</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">24/7</div>
+                            <div>доступ</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <!-- ===== МЕСТО ДЛЯ ФОТО 2: Незрячий человек с телефоном ===== -->
+                    <!-- Положите файл в images/about-photo.jpg -->
+                    <img src="images/about-photo.jpg" alt="Незрячий человек использует GuideMe" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="placeholder-text" style="display: none; flex-direction: column;">
+                        <span style="font-size: 48px; margin-bottom: 10px;">👨‍🦯</span>
+                        <span>Вставьте фото незрячего человека</span>
+                        <small style="font-size: 14px; margin-top: 10px;">images/about-photo.jpg</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Дорожная карта -->
+        <section id="roadmap" class="roadmap">
+            <h2 class="section-title"><span class="gradient-text">Карта развития</span></h2>
+            <div class="section-subtitle">
+                Мы только в начале пути. Вот что ждёт GuideMe в ближайшие кварталы
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Q1 2026</div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge completed">✅ Завершено</span>
+                        <h3>Alpha 1.0</h3>
+                        <p>✓ Базовое распознавание объектов<br>
+                           ✓ Голосовое описание<br>
+                           ✓ Приоритет людей и машин<br>
+                           ✓ Работа в браузере</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Q2 2026</div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge">🚀 В разработке</span>
+                        <h3>Alpha 1.1 — Безопасность</h3>
+                        <p>• Определение расстояния до объектов<br>
+                           • Режим безопасности (вибрация, сигналы)<br>
+                           • Умное повторение (5 секунд стабильности)<br>
+                           • Предупреждение о препятствиях</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Q3 2026</div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge">📋 В планах</span>
+                        <h3>Alpha 1.2 — Память и новые объекты</h3>
+                        <p>• Сохранение настроек<br>
+                           • Энергосбережение<br>
+                           • Новые объекты: ступеньки, лестницы, бордюры<br>
+                           • Распознавание знаков и переходов</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Q4 2026</div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge">📋 В планах</span>
+                        <h3>Beta 1.0 — Навигация</h3>
+                        <p>• GPS-навигация<br>
+                           • "Поверните направо через 10 метров"<br>
+                           • Распознавание текста (вывески)<br>
+                           • Голосовое управление</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2027</div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge">🌟 Цель</span>
+                        <h3>Release 1.0 — Полная свобода</h3>
+                        <p>• Самостоятельное передвижение по городу (Навигация, голосовой помошник и т.д)<br>
+                           • Перерождение в мобильное приложение<br>
+                           • Сообщество и помощь волонтёров<br>
+                           • 20+ языков по всему миру</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">Q4 2027</div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge">📋 В планах</span>
+                        <h3>Интеграция системы в очки 🕶️</h3>
+                        <p>• Помошник всегда рядом!<br>
+                           • Голосовое управление<br>
+                           • Полная свобода без телефона</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<section id="donate" class="donate">
+    <div class="donate-card">
+        <h2 class="donate-title">Поддержите развитие</h2>
+        <p class="donate-description">
+            GuideMe бесплатен для всех. Ваша поддержка поможет нам 
+            быстрее реализовать дорожную карту и сделать мир доступнее.
+        </p>
+        
+        <!-- Яндекс Чаевые (основной способ) -->
+        <div style="margin-bottom: 30px;">
+            <a href="https://pay.cloudtips.ru/p/79130c01" target="_blank" class="btn-donate" style="display: inline-block; text-decoration: none; background: #FCD34D; color: #000; padding: 20px 50px; font-size: 20px; border-radius: 50px; font-weight: bold; margin-bottom: 15px;">
+                💛 Поддержать через Яндекс Чаевые
+            </a>
+            <p style="font-size: 14px; opacity: 0.7;">Безопасная оплата картой или СБП</p>
+        </div>
+        
+        <!-- Альтернативные способы -->
+        <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="margin-bottom: 20px; font-size: 16px;">
+                ✨ Хотите помочь иначе?
+            </p>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <!-- Telegram контакт -->
+                <a href="https://t.me/@Ghroman" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(33, 150, 243, 0.2); padding: 15px 30px; border-radius: 50px; text-decoration: none; color: #fff; border: 1px solid #2196F3; transition: 0.3s;">
+                    <span style="font-size: 24px;">📱</span>
+                    <div style="text-align: left;">
+                        <div style="font-weight: bold;">Telegram</div>
+                        <div style="font-size: 12px; opacity: 0.7;">@Ghroman</div>
+                    </div>
+                </a>
+                
+                <!-- Email контакт (запасной) -->
+                <a href="mailto:info@guideme.com" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 15px 30px; border-radius: 50px; text-decoration: none; color: #fff; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;">
+                    <span style="font-size: 24px;">✉️</span>
+                    <div style="text-align: left;">
+                        <div style="font-weight: bold;">Email</div>
+                        <div style="font-size: 12px; opacity: 0.7;">info@guideme.com</div>
+                    </div>
+                </a>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 14px; opacity: 0.6;">
+                💚 По вопросам сотрудничества, рекламы или других способов поддержки — пишите в Telegram
+            </p>
+        </div>
+        
+        <p style="margin-top: 30px; font-size: 12px; opacity: 0.5;">
+            Спасибо, что делаете мир доступнее
+        </p>
+    </div>
+</section>
+
+        <footer class="footer">
+            <div>
+                <div class="footer-logo">👁️ GuideMe</div>
+                <p style="opacity: 0.6; margin-bottom: 20px;">
+                    Технологии на службе добра
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link">📘</a>
+                    <a href="#" class="social-link">🐦</a>
+                    <a href="#" class="social-link">📱</a>
+                </div>
+            </div>
+            <div>
+                <h4>Навигация</h4>
+                <ul class="footer-links">
+                    <li><a href="#how-it-works">Как это работает</a></li>
+                    <li><a href="#features">Функции</a></li>
+                    <li><a href="#about">О проекте</a></li>
+                    <li><a href="#roadmap">Развитие</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Контакты</h4>
+                <ul class="footer-links">
+                    <li><a href="mailto:info@guideme.com">info@guideme.com</a></li>
+                    <li><a href="#">Telegram</a></li>
+                    <li><a href="#">GitHub</a></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Автоматически показываем заглушки если фото не загрузились
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('error', function() {
+                    this.style.display = 'none';
+                    const placeholder = this.nextElementSibling;
+                    if (placeholder && placeholder.classList.contains('placeholder-text')) {
+                        placeholder.style.display = 'flex';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
